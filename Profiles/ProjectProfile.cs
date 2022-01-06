@@ -12,6 +12,9 @@ namespace ProjectService.Profiles
             CreateMap<Project, ProjectReadDto>();
             CreateMap<ProjectCreateDto, Project>();
             CreateMap<ProjectUpdateDto, Project>();
+            CreateMap<ProjectUpdateTodoDto, Project>();
+            CreateMap<Todo, TodoReadDto>();
+            CreateMap<TodoCreateDto, Todo>();
         }
     }
 }

@@ -89,6 +89,21 @@ namespace ProjectService.Controllers
             return CreatedAtRoute(nameof(GetProjectById), new { Id = projectUpdateDto.Id }, projectUpdateDto);
         }
 
+        [HttpPut("{id}/test", Name = "UpdateTodoInProject")]
+        public ActionResult<ProjectReadDto> UpdateTodoInProject(int id, ProjectUpdateTodoDto projectUpdateDto)
+        {
+            var projectModelFromRepo = _repository.GetProjectById(id);
+            _mapper.Map(projectUpdateDto, projectModelFromRepo);
+            if (projectModelFromRepo == null)
+            {
+                return NotFound();
+            }
+            _repository.UpdateProject(id);
+            _repository.SaveChanges();
+            
+            return CreatedAtRoute(nameof(GetProjectById), new { Id = projectUpdateDto.Id }, projectUpdateDto);
+        }
+
         [HttpDelete("{id}")]
         public ActionResult DeleteProjectById(int id)
         {

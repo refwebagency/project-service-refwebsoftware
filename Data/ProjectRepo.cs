@@ -3,6 +3,7 @@ using ProjectService.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using ProjectService.Data;
+using System;
 
 // Sur ce fichier j'implémente le contenu des méthodes
 
@@ -63,6 +64,19 @@ namespace ProjectService.Data
         {
             var projectId = _context.project.Find(id);
             _context.Entry(projectId).State = EntityState.Modified;
+        }
+
+        public void AddTodoInProject(int id, Todo todo)
+        {
+            if (todo != null)
+            {
+                var projectId = _context.project.Find(id);
+                Console.WriteLine(projectId.Id);
+                Console.WriteLine(todo.Name);
+                projectId.Todos.Add(todo);
+                _context.SaveChanges();
+            }
+            
         }
 
         public void DeleteProjectById(int id)

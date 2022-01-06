@@ -1,10 +1,9 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 
 namespace ProjectService.Models
 {
-    public class Project
+    public class Todo
     {
         [Key]
         [Required]
@@ -14,12 +13,18 @@ namespace ProjectService.Models
         public string Name { get; set; }
 
         [Required]
-        public DateTime StartDate { get; set; }        
+        public int Experience { get; set; }
 
         [Required]
-        public DateTime EndtDate { get; set; }
+        public string Description { get; set; }
 
-        public ICollection<Todo> Todos { get; set; } = new List<Todo>();
+        [Required]
+        public int Time { get; set; }
+
+        [Required]
+        public string Status { get; set; }
+
+        // public Todo
 
         // public ProjectType
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectService.Data;
 using ProjectService.Dtos;
 using ProjectService.Models;
+using ProjectService.SyncDataService.Http;
 
 
 namespace ProjectService.Controllers
@@ -15,12 +16,15 @@ namespace ProjectService.Controllers
     {
         private readonly IProjectRepo _repository;
         private readonly IMapper _mapper;
+
+        private readonly ITodoDataClient _todoDataClient;
     
 
-        public ProjectController(IProjectRepo repository, IMapper mapper)
+        public ProjectController(IProjectRepo repository, IMapper mapper, ITodoDataClient todoDataClient)
         {
             _repository = repository;
             _mapper = mapper;
+            _todoDataClient = todoDataClient;
         }
 
         /**Pour mettre en forme des résulat de GetAllProjects, 
@@ -65,6 +69,15 @@ namespace ProjectService.Controllers
             _repository.SaveChanges();
 
             var projectReadDto = _mapper.Map<ProjectReadDto>(projectModel);
+
+            try
+            {
+                _todoDataClient.SendProjectToTodo(projectReadDto);
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Error : " + ex.Message);
+            }
 
             //reourne une route qui renvoie avec un project specifique
             return CreatedAtRoute(nameof(GetProjectById), new { Id = projectReadDto.Id }, projectReadDto);

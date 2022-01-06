@@ -9,5 +9,7 @@ namespace ProjectService.Data
         public AppDbContext(DbContextOptions<AppDbContext> opt) : base(opt){}
 
         public DbSet<Project> project {get; set;}
+
+        // c de la merde
     }
 }

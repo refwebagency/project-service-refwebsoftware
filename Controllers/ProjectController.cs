@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectService.Data;
 using ProjectService.Dtos;
 using ProjectService.Models;
-
+using ProjectService.SyncDataServices.Http;
 
 namespace ProjectService.Controllers
 {
@@ -15,12 +15,15 @@ namespace ProjectService.Controllers
     {
         private readonly IProjectRepo _repository;
         private readonly IMapper _mapper;
+
+        private readonly ITodoDataClient _todoDataClient;
     
 
-        public ProjectController(IProjectRepo repository, IMapper mapper)
+        public ProjectController(IProjectRepo repository, IMapper mapper, ITodoDataClient todoDataClient)
         {
             _repository = repository;
             _mapper = mapper;
+            _todoDataClient= todoDataClient;
         }
 
         /**Pour mettre en forme des résulat de GetAllProjects, 
@@ -89,11 +92,17 @@ namespace ProjectService.Controllers
             return CreatedAtRoute(nameof(GetProjectById), new { Id = projectUpdateDto.Id }, projectUpdateDto);
         }
 
-        [HttpPut("{id}/test", Name = "UpdateTodoInProject")]
-        public ActionResult<ProjectReadDto> UpdateTodoInProject(int id, ProjectUpdateTodoDto projectUpdateDto)
+        [HttpPut("{id}/todo", Name = "PushTodoInProject")]
+        public ActionResult<ProjectReadDto> PushTodoInProject(int id, ProjectUpdateTodoDto projectUpdateTodoDto)
         {
+            Console.WriteLine("Controller : ");
+            var todoitems = _todoDataClient.GetTodoByProjectId(id);
+            
+            Console.WriteLine(todoitems);
+
             var projectModelFromRepo = _repository.GetProjectById(id);
-            _mapper.Map(projectUpdateDto, projectModelFromRepo);
+            _mapper.Map(projectUpdateTodoDto, projectModelFromRepo); 
+
             if (projectModelFromRepo == null)
             {
                 return NotFound();
@@ -101,7 +110,7 @@ namespace ProjectService.Controllers
             _repository.UpdateProject(id);
             _repository.SaveChanges();
             
-            return CreatedAtRoute(nameof(GetProjectById), new { Id = projectUpdateDto.Id }, projectUpdateDto);
+            return CreatedAtRoute(nameof(GetProjectById), new { Id = projectUpdateTodoDto.Id }, projectUpdateTodoDto);
         }
 
         [HttpDelete("{id}")]

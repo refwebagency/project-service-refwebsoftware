@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using ProjectService.Data;
+using ProjectService.SyncDataServices.Http;
 
 namespace ProjectService
 {
@@ -32,7 +33,7 @@ namespace ProjectService
             services.AddDbContext<AppDbContext>(opt => opt.UseInMemoryDatabase("project"));
 
             services.AddScoped<IProjectRepo, ProjectRepo>();
-
+            services.AddHttpClient<ITodoDataClient, HttpTodoDataClient>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers();
             services.AddSwaggerGen(c =>

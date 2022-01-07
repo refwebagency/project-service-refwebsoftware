@@ -66,19 +66,6 @@ namespace ProjectService.Data
             _context.Entry(projectId).State = EntityState.Modified;
         }
 
-        public void AddTodoInProject(int id, Todo todo)
-        {
-            if (todo != null)
-            {
-                var projectId = _context.project.Find(id);
-                Console.WriteLine(projectId.Id);
-                Console.WriteLine(todo.Name);
-                projectId.Todos.Add(todo);
-                _context.SaveChanges();
-            }
-            
-        }
-
         public void DeleteProjectById(int id)
         {
             var projectItem = _context.project.Find(id);

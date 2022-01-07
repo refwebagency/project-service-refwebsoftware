@@ -11,6 +11,5 @@ namespace ProjectService.Dtos
         public int Id { get; set; }
  
         public ICollection<Todo> Todos { get; set; } = new List<Todo>();
-
     }
 }

@@ -72,3 +72,4 @@ C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\obj\Debu
 C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\obj\Debug\net5.0\ref\ProjectService.dll
 C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\obj\Debug\net5.0\ProjectService.pdb
 C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\obj\Debug\net5.0\ProjectService.genruntimeconfig.cache
+C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\bin\Debug\net5.0\Newtonsoft.Json.dll

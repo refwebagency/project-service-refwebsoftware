@@ -18,7 +18,5 @@ namespace ProjectService.Data
         void UpdateProject(int projectId); //pour mettre à jour un projet
 
         void DeleteProjectById(int projectId); //pour supprimer un projet
-
-        void AddTodoInProject(int id, Todo todo);
     }
 }

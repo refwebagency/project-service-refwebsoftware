@@ -16,5 +16,8 @@ namespace ProjectService.Dtos
 
         [Required]
         public DateTime EndtDate { get; set; }
+
+        [Required]
+        public int ClientId { get; set; }
     }
 }

@@ -13,6 +13,10 @@ namespace ProjectService.Dtos
         public DateTime StartDate { get; set; }   
 
         public DateTime EndtDate { get; set; }
+
+        public int ClientId { get; set; }
+        
+        public int ProjectTypeId { get; set; }
         
 
     }

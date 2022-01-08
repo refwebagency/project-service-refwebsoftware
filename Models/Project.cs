@@ -18,10 +18,10 @@ namespace ProjectService.Models
         [Required]
         public DateTime EndtDate { get; set; }
 
-        // public Todo
+        [Required]
+        public int ProjectTypeId { get; set; }
 
-        // public ProjectType
-
-        // public Client
+        [Required]
+        public int ClientId { get; set; }
     }
 }

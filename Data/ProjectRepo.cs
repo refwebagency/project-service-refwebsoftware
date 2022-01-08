@@ -55,6 +55,16 @@ namespace ProjectService.Data
             return _context.project.FirstOrDefault(p => p.Id == id);
         }
 
+        public IEnumerable<Project> GetProjectsByProjectTypeId(int id)
+        {
+            return _context.project.Where(p => p.ProjectTypeId == id).ToList();
+        }
+
+        public IEnumerable<Project> GetProjectsByClientId(int id)
+        {
+            return _context.project.Where(c => c.ClientId == id).ToList();
+        }
+
         /**
         *Pour update un projet je doit en premier le récupere par son id 
         *puis je le modifie par son état

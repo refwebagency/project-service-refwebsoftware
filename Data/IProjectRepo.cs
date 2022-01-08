@@ -11,6 +11,11 @@ namespace ProjectService.Data
 
         //IEnumerable retourne une liste
         IEnumerable<Project> GetAllProjects(); //récupere une liste de projets
+
+        IEnumerable<Project> GetProjectsByProjectTypeId(int id); //récupere une liste de projets par type de projet
+
+        IEnumerable<Project> GetProjectsByClientId(int id); //récupere une liste de projets par tclient
+
         Project GetProjectById(int projectId); //récupere un projet par l'id 
 
         void CreateProject(Project project); //pour créer un projet

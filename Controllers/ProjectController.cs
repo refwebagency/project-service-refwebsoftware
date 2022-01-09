@@ -56,7 +56,7 @@ namespace ProjectService.Controllers
         }
 
         //Pour retourner un objet par L'id
-        [HttpGet("{id}", Name = "GetProjectByProjectTypeId")]
+        [HttpGet("projecttype/{id}", Name = "GetProjectByProjectTypeId")]
         public ActionResult<ProjectReadDto> GetProjectByProjectTypeId(int id)
         {
             var ProjectItem = _repository.GetProjectsByProjectTypeId(id);
@@ -72,7 +72,7 @@ namespace ProjectService.Controllers
         }
 
         //Pour retourner un objet par L'id
-        [HttpGet("{id}", Name = "GetProjectByClientId")]
+        [HttpGet("client/{id}", Name = "GetProjectByClientId")]
         public ActionResult<ProjectReadDto> GetProjectByClientId(int id)
         {
             var ProjectItem = _repository.GetProjectsByClientId(id);

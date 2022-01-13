@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using ProjectService.Models;
+using project_service_refwebsoftware.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using ProjectService.Data;
+using Newtonsoft.Json.Linq;
+using System;
 
 // Sur ce fichier j'implémente le contenu des méthodes
 
-namespace ProjectService.Data
+namespace project_service_refwebsoftware.Data
 {
     public class ProjectRepo : IProjectRepo
     {
@@ -53,6 +54,16 @@ namespace ProjectService.Data
         public Project GetProjectById(int id)
         {
             return _context.project.FirstOrDefault(p => p.Id == id);
+        }
+
+        public IEnumerable<Project> GetProjectsByProjectTypeId(int id)
+        {
+            return _context.project.Where(pt => pt.ProjectTypeId == id).ToList();
+        }
+
+        public IEnumerable<Project> GetProjectsByClientId(int id)
+        {
+            return _context.project.Where(cp => cp.ClientId == id).ToList();
         }
 
         /**

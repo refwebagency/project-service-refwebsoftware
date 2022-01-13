@@ -1,8 +1,8 @@
 using AutoMapper;
-using ProjectService.Models;
-using ProjectService.Dtos;
+using project_service_refwebsoftware.Models;
+using project_service_refwebsoftware.Dtos;
 
-namespace ProjectService.Profiles
+namespace project_service_refwebsoftware.Profiles
 {
     public class ProjectProfile : Profile
     {
@@ -12,6 +12,8 @@ namespace ProjectService.Profiles
             CreateMap<Project, ProjectReadDto>();
             CreateMap<ProjectCreateDto, Project>();
             CreateMap<ProjectUpdateDto, Project>();
+            CreateMap<Client, ClientReadDto>();
+            CreateMap<ProjectType, ProjectTypeReadDto>();
         }
     }
 }

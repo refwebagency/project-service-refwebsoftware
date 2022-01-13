@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System;
 
-namespace ProjectService.Dtos
+namespace project_service_refwebsoftware.Dtos
 {
     public class ProjectUpdateDto
     {
@@ -16,5 +16,8 @@ namespace ProjectService.Dtos
 
         [Required]
         public DateTime EndtDate { get; set; }
+
+        [Required]
+        public int ClientId { get; set; }
     }
 }

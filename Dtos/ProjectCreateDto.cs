@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Collections.Generic;
 using System;
 
-namespace ProjectService.Dtos
+namespace project_service_refwebsoftware.Dtos
 {
     public class ProjectCreateDto
     {
@@ -14,5 +14,11 @@ namespace ProjectService.Dtos
 
         [Required]
         public DateTime EndtDate { get; set; }
+
+        [Required]
+        public int ClientId { get; set; }
+
+        [Required]
+        public int ProjectTypeId { get; set; }
     }
 }

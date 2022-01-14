@@ -8,6 +8,8 @@ namespace project_service_refwebsoftware.Models
         [Required]
         public int Id { get; set; }
 
+        public int ExternalId { get; set; }
+
         [Required]
         public string Name { get; set; }
 

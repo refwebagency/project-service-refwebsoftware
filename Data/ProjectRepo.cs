@@ -26,12 +26,82 @@ namespace project_service_refwebsoftware.Data
         * sauvegarde les changements
         * sinon erreur
         */
-        public void CreateProject(Project project)
+        public void CreateProject(Project project, Client client)
         {
             if(project != null)
             {
             //_context.Projects equivaut a bdd.Projects
+
+
+            // _context.project.Add(project);
+            // Console.WriteLine(project.Name);
+            // Console.WriteLine(project.client.LastName);
+
+            //  dynamic data = JObject.Parse(project.client.ToString());
+            //  Console.WriteLine(data.Name);
+            //JArray array = JArray.Parse(project);
+            
+            var NewClient = new Client
+            {
+                ExternalId = client.ExternalId,
+                Name = client.Name,
+                LastName = client.LastName
+            };
+
+            //Console.WriteLine(NewClient.ExternalId);
+            _context.client.Attach(NewClient);
+
+            // // je recupere le client qui vient d'être crée
+
+            var clientCreate = _context.client.Find(NewClient.Id);
+
+            Console.WriteLine(clientCreate.ExternalId);
+            
+
+            
+            // var newProject = new Project
+            // {
+            //     Name = project.Name,
+            //     StartDate = project.StartDate,
+            //     EndtDate = project.EndtDate,
+            //     ProjectTypeId = project.ProjectTypeId,
+            //     projectType = project.projectType,
+            //     ClientId = project.ClientId,
+            //     client = clientCreate
+                
+            // };
+
+
+
+            Console.WriteLine(project.client.LastName);
+            
+            // newProject.client = new Client(){
+            //     Name = project.client.Name,
+            //     LastName = project.client.LastName
+            // };
+
+            project.client = clientCreate;
+
             _context.project.Add(project);
+
+            //CreateClientInProject(newProject.client);
+            // _context.client.Add(newClient);
+            _context.SaveChanges();
+            
+            }
+            else
+            {
+                Console.WriteLine("Client pas trouvé");
+            }
+            
+        }
+
+        public void CreateClientInProject(Client client)
+        {
+            if(client != null)
+            {
+            
+            _context.client.Add(client);
             _context.SaveChanges();
             }
             
@@ -46,6 +116,11 @@ namespace project_service_refwebsoftware.Data
             return _context.project.ToList();
         }
         
+        public IEnumerable<Client> GetAllClientInProjects()
+        {
+            return _context.client.ToList();
+        }
+
         /**
         * je veux qu'il me retourne suivant le context un project par l'id de type int
         * ça va me récuperé le premier ou par default

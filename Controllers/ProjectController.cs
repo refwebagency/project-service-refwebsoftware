@@ -125,9 +125,13 @@ namespace project_service_refwebsoftware.Controllers
             var clientExternalId = _repository.GetClientById(clientMap.Id);
             var projectTypeExternalId = _repository.GetProjectTypeById(projectTypeMap.Id);
 
+            /**
+            * condition qui suivant à la valeur de clienExternalID
+            * et projectExternalId attache l'objet ou une valeur de l'objet
+            */
             if (clientExternalId != null && projectTypeExternalId != null)
             {
-                projectModel.ClientId = clientMap.Id;
+                projectModel.ClientId = clientMap.Id; 
                 projectModel.ProjectTypeId = projectTypeMap.Id;
             }
             else if (clientExternalId != null && projectTypeExternalId == null)

@@ -26,83 +26,17 @@ namespace project_service_refwebsoftware.Data
         * sauvegarde les changements
         * sinon erreur
         */
-        public void CreateProject(Project project, Client client)
+        public void CreateProject(Project project)
         {
             if(project != null)
-            {
-            //_context.Projects equivaut a bdd.Projects
+            {  
 
-
-            // _context.project.Add(project);
-            // Console.WriteLine(project.Name);
-            // Console.WriteLine(project.client.LastName);
-
-            //  dynamic data = JObject.Parse(project.client.ToString());
-            //  Console.WriteLine(data.Name);
-            //JArray array = JArray.Parse(project);
-            
-            var NewClient = new Client
-            {
-                ExternalId = client.ExternalId,
-                Name = client.Name,
-                LastName = client.LastName
-            };
-
-            //Console.WriteLine(NewClient.ExternalId);
-            _context.client.Attach(NewClient);
-
-            // // je recupere le client qui vient d'être crée
-
-            var clientCreate = _context.client.Find(NewClient.Id);
-
-            Console.WriteLine(clientCreate.ExternalId);
-            
-
-            
-            // var newProject = new Project
-            // {
-            //     Name = project.Name,
-            //     StartDate = project.StartDate,
-            //     EndtDate = project.EndtDate,
-            //     ProjectTypeId = project.ProjectTypeId,
-            //     projectType = project.projectType,
-            //     ClientId = project.ClientId,
-            //     client = clientCreate
-                
-            // };
-
-
-
-            Console.WriteLine(project.client.LastName);
-            
-            // newProject.client = new Client(){
-            //     Name = project.client.Name,
-            //     LastName = project.client.LastName
-            // };
-
-            project.client = clientCreate;
-
-            _context.project.Add(project);
-
-            //CreateClientInProject(newProject.client);
-            // _context.client.Add(newClient);
-            _context.SaveChanges();
-            
+            // je recupere le client qui vient d'être crée
+            _context.project.Add(project);        
             }
             else
             {
-                Console.WriteLine("Client pas trouvé");
-            }
-            
-        }
-
-        public void CreateClientInProject(Client client)
-        {
-            if(client != null)
-            {
-            
-            _context.client.Add(client);
-            _context.SaveChanges();
+                throw new System.ArgumentNullException(nameof(project));
             }
             
         }
@@ -113,12 +47,21 @@ namespace project_service_refwebsoftware.Data
         */
         public IEnumerable<Project> GetAllProjects()
         {
+            _context.projectType.ToList();
+            _context.client.ToList();
             return _context.project.ToList();
         }
         
+        // je veux qu'il me retourne suivant le context les client sous forme de liste
         public IEnumerable<Client> GetAllClientInProjects()
         {
             return _context.client.ToList();
+        }
+
+        // je veux qu'il me retourne suivant le context les types de projects sous forme de liste
+        public IEnumerable<ProjectType> GetAllProjectTypeInProject()
+        {
+            return _context.projectType.ToList();
         }
 
         /**
@@ -128,16 +71,32 @@ namespace project_service_refwebsoftware.Data
         */
         public Project GetProjectById(int id)
         {
+            _context.projectType.ToList();
+            _context.client.ToList();
             return _context.project.FirstOrDefault(p => p.Id == id);
+        }
+
+        public Client GetClientById(int id)
+        {
+            return _context.client.FirstOrDefault(c => c.Id == id);
+        }
+
+        public ProjectType GetProjectTypeById(int id)
+        {
+            return _context.projectType.FirstOrDefault(p => p.Id == id);
         }
 
         public IEnumerable<Project> GetProjectsByProjectTypeId(int id)
         {
+            _context.projectType.ToList();
+            _context.client.ToList();
             return _context.project.Where(pt => pt.ProjectTypeId == id).ToList();
         }
 
         public IEnumerable<Project> GetProjectsByClientId(int id)
         {
+            _context.projectType.ToList();
+            _context.client.ToList();
             return _context.project.Where(cp => cp.ClientId == id).ToList();
         }
 
@@ -149,6 +108,7 @@ namespace project_service_refwebsoftware.Data
         {
             var projectId = _context.project.Find(id);
             _context.Entry(projectId).State = EntityState.Modified;
+            
         }
 
         public void DeleteProjectById(int id)

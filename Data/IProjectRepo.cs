@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using project_service_refwebsoftware.Dtos;
 using project_service_refwebsoftware.Models;
 
 namespace project_service_refwebsoftware.Data
@@ -21,13 +20,13 @@ namespace project_service_refwebsoftware.Data
 
         Project GetProjectById(int projectId); //récupere un projet par l'id 
 
-        void CreateProject(Project project, Client client); //pour créer un projet
+        Client GetClientById(int clientId); //récupere un client par l'id
 
-        void CreateClientInProject(Client client);
+        void CreateProject(Project project); //pour créer un projet
 
-        //void CreateClientInProject(Project project, Client client);
+        IEnumerable<ProjectType> GetAllProjectTypeInProject(); //pour retourner tous les types de projets
 
-        //void CreateProjectTypeInProject();
+        ProjectType GetProjectTypeById(int ProjectTypeId);
 
         void UpdateProject(int projectId); //pour mettre à jour un projet
 

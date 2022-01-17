@@ -26,10 +26,8 @@ namespace project_service_refwebsoftware.Models
         [Required]
         public int ClientId { get; set; }
 
+        [Required]
         public Client client { get; set; }
 
-        public Project(){
-            this.client = new Client();
-        }
     }
 }

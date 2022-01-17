@@ -27,17 +27,6 @@ namespace project_service_refwebsoftware.Controllers
             _httpClient = httpClient;
         }
 
-        //retoruner tous les clients
-        [HttpGet("clients")]
-        public ActionResult<IEnumerable<ProjectReadDto>> GetAllClientInProjects()
-        {
-            
-
-            var ClientItem = _repository.GetAllClientInProjects();
-
-            //Retourne un statut 200, qui affiche le resultat
-            return Ok(_mapper.Map<IEnumerable<ClientReadDto>>(ClientItem));
-        }
 
         /**Pour mettre en forme des résulat de GetAllProjects, 
         pour avoir tous les projets sous forme de liste
@@ -61,46 +50,12 @@ namespace project_service_refwebsoftware.Controllers
         {
             var ProjectItem = _repository.GetProjectById(id);
 
-            // // requete http en async pour recuperer sur clientService un client par son id stock dans une variable
-            // var getClient = await _httpClient.GetAsync("https://localhost:1001/Client/" + ProjectItem.ClientId);
-
-            // // requete http en async pour recuperer sur projectTypeService un type de projet par son id et stocke dans une variable
-            // var getProjectType = await _httpClient.GetAsync("https://localhost:4001/projecttype/" + ProjectItem.ProjectTypeId); 
-
-            // // deserialisation de l'objet client
-            // var client = JsonConvert.DeserializeObject<Client>(
-            //     await getClient.Content.ReadAsStringAsync()
-            //     );
-
-            // // deserialisation de l'objet projecttype
-            // var projectType = JsonConvert.DeserializeObject<ProjectType>(
-            //     await getProjectType.Content.ReadAsStringAsync()
-            //     );
-
-            // // mapping des données deserialisés 
-            // var clientMap = _mapper.Map<ClientReadDto>(client);
-
-            // var projectTypeMap = _mapper.Map<ProjectTypeReadDto>(projectType);
-
-            // // création d'un nouvel objet a partir des données reçues et deserialisées
-            // var clientInProject = new Client();
-            // clientInProject.Id = clientMap.Id;
-            // clientInProject.Name = clientMap.Name;
-            // clientInProject.LastName = clientMap.LastName;
-
-            // // création d'un nouvel objet a partir des données reçues et deserialisées
-            // var projectTypeInProject = new ProjectType();
-            // projectTypeInProject.Id = projectTypeMap.Id;
-            // projectTypeInProject.Name = projectTypeMap.Name;
-
-            // // set des nouveaux objets à l'objet ProjectItem
-            // ProjectItem.client = clientInProject;
-            // ProjectItem.projectType = projectTypeInProject;
-
             
             if(ProjectItem != null)
             {
-            return Ok(_mapper.Map<ProjectReadDto>(ProjectItem));
+
+                return Ok(_mapper.Map<ProjectReadDto>(ProjectItem));
+
             }
             else
             {
@@ -115,8 +70,9 @@ namespace project_service_refwebsoftware.Controllers
             var ProjectItem = _repository.GetProjectsByProjectTypeId(id);
 
             if(ProjectItem != null)
-            {
-            
+            {   
+                var test = _mapper.Map<IEnumerable<ProjectReadDto>>(ProjectItem);
+                Console.WriteLine(test);
             return Ok(_mapper.Map<IEnumerable<ProjectReadDto>>(ProjectItem));
             }
             else
@@ -146,8 +102,6 @@ namespace project_service_refwebsoftware.Controllers
         {
             var projectModel = _mapper.Map<Project>(projectCreateDto);
 
-            
-
             // requete http en async pour recuperer sur clientService un client par son id stock dans une variable
             var getClient = await _httpClient.GetAsync("https://localhost:1001/Client/" + projectModel.ClientId); 
 
@@ -165,31 +119,34 @@ namespace project_service_refwebsoftware.Controllers
                 );
 
             // mapping des données deserialisés 
-            var clientMap = _mapper.Map<ClientReadDto>(client);
+            var clientMap = _mapper.Map<Client>(client);
+            var projectTypeMap = _mapper.Map<ProjectType>(projectType);
 
-            var projectTypeMap = _mapper.Map<ProjectTypeReadDto>(projectType);
+            var clientExternalId = _repository.GetClientById(clientMap.Id);
+            var projectTypeExternalId = _repository.GetProjectTypeById(projectTypeMap.Id);
 
-            // création d'un nouvel objet a partir des données reçues et deserialisées
-            var clientInProject = new Client();
-            clientInProject.ExternalId = clientMap.Id;
-            clientInProject.Name = clientMap.Name;
-            clientInProject.LastName = clientMap.LastName;
-
-            // création d'un nouvel objet a partir des données reçues et deserialisées
-            var projectTypeInProject = new ProjectType();
-            projectTypeInProject.Id = projectTypeMap.Id;
-            projectTypeInProject.Name = projectTypeMap.Name;
-
-            // projectModel.projectType = projectTypeInProject;
-            // projectModel.client = clientInProject;
-
-            var clientModel = _mapper.Map<Client>(clientInProject);
-
-            //var NewProject = _mapper.Map<Project>(projectReadDto);
-
-            //Console.WriteLine(clientModel.ExternalId);
-            
-            _repository.CreateProject(projectModel, clientModel);
+            if (clientExternalId != null && projectTypeExternalId != null)
+            {
+                projectModel.ClientId = clientMap.Id;
+                projectModel.ProjectTypeId = projectTypeMap.Id;
+            }
+            else if (clientExternalId != null && projectTypeExternalId == null)
+            {
+                projectModel.ClientId = clientMap.Id;
+                projectModel.projectType = projectTypeMap; // j'attache le nouveau type de projet au projet
+            }
+            else if (clientExternalId == null && projectTypeExternalId != null)
+            {
+                projectModel.client = clientMap; // j'attache le nouveau client au projet
+                projectModel.ProjectTypeId = projectTypeMap.Id; 
+            }
+            else
+            {
+                projectModel.projectType = projectTypeMap; // j'attache le nouveau type de projet au projet
+                projectModel.client = clientMap; // j'attache le nouveau client au projet
+            }
+       
+            _repository.CreateProject(projectModel);
 
             //sauvegarde les changements au niveau des données
             _repository.SaveChanges();

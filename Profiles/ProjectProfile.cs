@@ -13,8 +13,10 @@ namespace project_service_refwebsoftware.Profiles
             CreateMap<ProjectCreateDto, Project>();
             CreateMap<ProjectUpdateDto, Project>();
             CreateMap<Client, ClientReadDto>();
+            CreateMap<ClientReadDto, Client>();
             CreateMap<ClientCreateDto, Client>();
             CreateMap<ProjectType, ProjectTypeReadDto>();
+            CreateMap<ProjectTypeReadDto, ProjectType>();
         }
     }
 }

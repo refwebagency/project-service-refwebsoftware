@@ -109,12 +109,12 @@ namespace project_service_refwebsoftware.Controllers
             var getProjectType = await _httpClient.GetAsync("https://localhost:4001/projecttype/" + projectModel.ProjectTypeId); 
 
             // deserialisation de l'objet client
-            var client = JsonConvert.DeserializeObject<Client>(
+            var client = JsonConvert.DeserializeObject<ClientReadDto>(
                 await getClient.Content.ReadAsStringAsync()
                 );
 
             // deserialisation de l'objet projecttype
-            var projectType = JsonConvert.DeserializeObject<ProjectType>(
+            var projectType = JsonConvert.DeserializeObject<ProjectTypeReadDto>(
                 await getProjectType.Content.ReadAsStringAsync()
                 );
 

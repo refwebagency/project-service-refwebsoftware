@@ -106,7 +106,7 @@ namespace project_service_refwebsoftware.Controllers
             var getClient = await _httpClient.GetAsync("https://localhost:1001/Client/" + projectModel.ClientId); 
 
             // requete http en async pour recuperer sur projectTypeService un type de projet par son id et stocke dans une variable
-            var getProjectType = await _httpClient.GetAsync("https://localhost:4001/projecttype/" + projectModel.ProjectTypeId); 
+            var getProjectType = await _httpClient.GetAsync("https://localhost:5001/projecttype/" + projectModel.ProjectTypeId); 
 
             // deserialisation de l'objet client
             var client = JsonConvert.DeserializeObject<ClientReadDto>(

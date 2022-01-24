@@ -110,3 +110,5 @@ C:\Users\Maxime\Desktop\project-service-refwebsoftware\obj\Debug\net5.0\ref\Proj
 C:\Users\Maxime\Desktop\project-service-refwebsoftware\obj\Debug\net5.0\ProjectService.pdb
 C:\Users\Maxime\Desktop\project-service-refwebsoftware\obj\Debug\net5.0\ProjectService.genruntimeconfig.cache
 C:\Users\Maxime\Desktop\project-service-refwebsoftware\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\bin\Debug\net5.0\Newtonsoft.Json.dll
+C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\bin\Debug\net5.0\RabbitMQ.Client.dll

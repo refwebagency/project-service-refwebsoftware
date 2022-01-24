@@ -121,6 +121,21 @@ namespace project_service_refwebsoftware.Data
             
         }
 
+        //méthode update client rabbitMQ
+        public void UpdateClientById(int id)
+        {
+            var Client = _context.client.FirstOrDefault(Client => Client.Id == id);
+
+            _context.Entry(Client).State = EntityState.Modified;
+        }
+
+        public void UpdateProjectTypeById(int id)
+        {
+            var projectType = _context.projectType.FirstOrDefault(projectType => projectType.Id == id);
+
+            _context.Entry(projectType).State = EntityState.Modified;
+        }
+
         /**
         * Pour sauvegarder les changements si dans le context
         * les changements sont >= à 0

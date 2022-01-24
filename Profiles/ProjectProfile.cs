@@ -17,6 +17,13 @@ namespace project_service_refwebsoftware.Profiles
             CreateMap<ClientCreateDto, Client>();
             CreateMap<ProjectType, ProjectTypeReadDto>();
             CreateMap<ProjectTypeReadDto, ProjectType>();
+
+            //RabbitMQ
+            CreateMap<ClientUpdatedDto, Client>();
+            CreateMap<Client, ClientUpdatedDto>();
+
+            CreateMap<ProjectType, ProjectTypeUpdateDto>();
+            CreateMap<ProjectTypeUpdateDto, ProjectType>();
         }
     }
 }

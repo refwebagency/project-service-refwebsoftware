@@ -8,6 +8,8 @@ using project_service_refwebsoftware.Dtos;
 using project_service_refwebsoftware.Models;
 using System.Net.Http;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
+using project_service_refwebsoftware.AsyncDataService;
 
 namespace project_service_refwebsoftware.Controllers
 {
@@ -18,13 +20,17 @@ namespace project_service_refwebsoftware.Controllers
         private readonly IProjectRepo _repository;
         private readonly IMapper _mapper;
         private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
+        private readonly IMessageBusClient _messageBusClient;
     
 
-        public ProjectController(IProjectRepo repository, IMapper mapper, HttpClient httpClient)
+        public ProjectController(IProjectRepo repository, IMapper mapper, HttpClient httpClient, IConfiguration configuration, IMessageBusClient messageBusClient)
         {
             _repository = repository;
             _mapper = mapper;
             _httpClient = httpClient;
+            _configuration = configuration;
+            _messageBusClient = messageBusClient;
         }
 
 
@@ -103,10 +109,10 @@ namespace project_service_refwebsoftware.Controllers
             var projectModel = _mapper.Map<Project>(projectCreateDto);
 
             // requete http en async pour recuperer sur clientService un client par son id stock dans une variable
-            var getClient = await _httpClient.GetAsync("https://localhost:1001/Client/" + projectModel.ClientId); 
+            var getClient = await _httpClient.GetAsync($"{_configuration["ClientService"]}" + projectModel.ClientId); 
 
             // requete http en async pour recuperer sur projectTypeService un type de projet par son id et stocke dans une variable
-            var getProjectType = await _httpClient.GetAsync("https://localhost:5001/projecttype/" + projectModel.ProjectTypeId); 
+            var getProjectType = await _httpClient.GetAsync($"{_configuration["ProjectTypeService"]}" + projectModel.ProjectTypeId); 
 
             // deserialisation de l'objet client
             var client = JsonConvert.DeserializeObject<ClientReadDto>(
@@ -176,6 +182,26 @@ namespace project_service_refwebsoftware.Controllers
             }
             _repository.UpdateProject(id);
             _repository.SaveChanges();
+
+            // Envoie Async des Data
+            try
+            {
+                Console.WriteLine(projectModelFromRepo.Name);
+    
+                //On envoie les données du projet mis à jour avec les données du DTO
+                var projectUpdatedDto = _mapper.Map<ProjectUpdateAsyncDto>(projectModelFromRepo);
+
+                // On dit que l'event est égal à "Project_Updated"
+                projectUpdatedDto.Event = "Project_Updated";
+
+                // On appelle la méthode qui se trouve dans MessageBusClient
+                _messageBusClient.UpdatedProject(projectUpdatedDto);
+            }
+
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Error: Async" + ex.Message);
+            }
             
             return CreatedAtRoute(nameof(GetProjectById), new { Id = projectUpdateDto.Id }, projectUpdateDto);
         }

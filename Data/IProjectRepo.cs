@@ -31,5 +31,9 @@ namespace project_service_refwebsoftware.Data
         void UpdateProject(int projectId); //pour mettre à jour un projet
 
         void DeleteProjectById(int projectId); //pour supprimer un projet
+
+        void UpdateClientById(int id);
+
+        void UpdateProjectTypeById(int id);
     }
 }

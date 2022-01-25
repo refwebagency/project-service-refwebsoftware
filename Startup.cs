@@ -14,6 +14,9 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using project_service_refwebsoftware.Data;
 using project_service_refwebsoftware.Controllers;
+using project_service_refwebsoftware.AsyncDataServices;
+using project_service_refwebsoftware.EventProcessing;
+using project_service_refwebsoftware.AsyncDataService;
 
 namespace project_service_refwebsoftware
 {
@@ -37,6 +40,9 @@ namespace project_service_refwebsoftware
             services.AddScoped<IProjectRepo, ProjectRepo>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddHttpClient<ProjectController>();
+            services.AddSingleton<IMessageBusClient, MessageBusClient>();
+            services.AddHostedService<MessageBusSuscriber>();
+            services.AddTransient<IEventProcessor, EventProcessor>();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {

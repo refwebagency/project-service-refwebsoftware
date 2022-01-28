@@ -6,6 +6,8 @@ using project_service_refwebsoftware.Dtos;
 using project_service_refwebsoftware.Models;
 using project_service_refwebsoftware.Controllers;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http;
+using System.Text;
 
 namespace project_service_refwebsoftware.EventProcessing
 {
@@ -15,10 +17,13 @@ namespace project_service_refwebsoftware.EventProcessing
 
         private readonly IMapper _mapper;
 
-        public EventProcessor(IServiceScopeFactory scopeFactory, IMapper mapper)
+        private readonly HttpClient _httpClient;
+
+        public EventProcessor(IServiceScopeFactory scopeFactory, IMapper mapper,HttpClient httpClient)
         {
             _scopeFactory = scopeFactory;
             _mapper = mapper;
+            _httpClient = httpClient;
         }
 
         public void ProcessEvent(string message)
@@ -33,6 +38,9 @@ namespace project_service_refwebsoftware.EventProcessing
                     break;
                 case EventType.ProjectTypeUpdated:
                     UpdateProjectType(message);
+                    break;
+                case EventType.ProjectCreated:
+                    CreateProject(message);
                     break;
                 default:
                     break;
@@ -59,6 +67,9 @@ namespace project_service_refwebsoftware.EventProcessing
                 case "ProjectType_Updated":
                     Console.WriteLine("--> Platform Updated Event Detected");
                     return EventType.ProjectTypeUpdated;
+                case "Project_Published":
+                    Console.WriteLine("--> Platform Created Event Detected");
+                    return EventType.ProjectCreated;
                 // Sinon nous retournons que l'objet est indeterminé
                 default:
                     Console.WriteLine("-> Could not determine the event type");
@@ -70,7 +81,7 @@ namespace project_service_refwebsoftware.EventProcessing
         {
             using(var scope = _scopeFactory.CreateScope())
             {
-                // Recuperation du scope de meetRepo
+                // Recuperation du scope de IprojectRepo
                 var repo = scope.ServiceProvider.GetRequiredService<IProjectRepo>();
 
                 //On deserialize le clientUpdatedMessage
@@ -141,13 +152,57 @@ namespace project_service_refwebsoftware.EventProcessing
                 }
             }
         }
+
+        private void CreateProject(string projectCreatedMessage)
+        {
+            using(var scope = _scopeFactory.CreateScope())
+            {
+                // Recuperation du scope de IProjectRepo
+                var repo = scope.ServiceProvider.GetRequiredService<IProjectRepo>();
+                var controller = scope.ServiceProvider.GetRequiredService<ProjectController>();
+
+                //On deserialize le clientUpdatedMessage
+                var projectCreatedDto = JsonSerializer.Deserialize<ProjectCreatedDto>(projectCreatedMessage);
+                Console.WriteLine($"--> Project Created: {projectCreatedDto}");
+
+                try
+                {
+
+                    //Console.WriteLine(projectCreatedDto.Name);
+
+                    var projectRepo = repo.GetProjectById(projectCreatedDto.Id);
+                    
+                    // SI le project existe ou non
+                    if(projectRepo != null)
+                    {                  
+                        Console.WriteLine("--> Project déjà existant");
+                    }
+                    else{
+                        var httpContent = new StringContent(JsonSerializer.Serialize(projectCreatedMessage), 
+                        Encoding.UTF8,
+                        "application/json"
+                        );
+                        var newProject = _mapper.Map<ProjectCreateDto>(projectCreatedDto);
+                        controller.CreateProject(newProject);
+                        
+                        Console.WriteLine("--> Project crée");
+                    }
+                }
+                // Si une erreur survient, on affiche un message
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"--> Could not create project to DB {ex.Message}");
+                }
+            }
+        }
     }
 
     //Type d'event
     enum EventType
     {
-        ClientUpdated,
-        ProjectTypeUpdated,
+        ClientUpdated, //clientService
+        ProjectTypeUpdated, //projectTypeService
+        ProjectCreated, //quotePDFService
         Undetermined
     }
 }

@@ -26,6 +26,9 @@ namespace project_service_refwebsoftware.Profiles
             CreateMap<ProjectTypeUpdateDto, ProjectType>();
 
             CreateMap<Project, ProjectUpdateAsyncDto>();
+            CreateMap<ProjectCreatedDto, Project>();
+            CreateMap<ProjectCreatedDto, ProjectCreateDto>();
+            CreateMap<ProjectCreateDto, ProjectCreatedDto>();
         }
     }
 }

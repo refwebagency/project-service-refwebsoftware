@@ -152,3 +152,4 @@ C:\Users\Maxime\Desktop\RefWebLogiciel - Services\project-service-refwebsoftware
 C:\Users\Maxime\Desktop\RefWebLogiciel - Services\project-service-refwebsoftware\obj\Debug\net5.0\ProjectService.pdb
 C:\Users\Maxime\Desktop\RefWebLogiciel - Services\project-service-refwebsoftware\obj\Debug\net5.0\ProjectService.genruntimeconfig.cache
 C:\Users\Maxime\Desktop\RefWebLogiciel - Services\project-service-refwebsoftware\bin\Debug\net5.0\appsettings.Production.json
+C:\Users\wuill\OneDrive\Documents\GitHub\project-service-refwebsoftware\bin\Debug\net5.0\appsettings.Production.json

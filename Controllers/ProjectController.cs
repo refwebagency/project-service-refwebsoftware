@@ -115,46 +115,25 @@ namespace project_service_refwebsoftware.Controllers
             var getProjectType = await _httpClient.GetAsync($"{_configuration["ProjectTypeService"]}" + projectModel.ProjectTypeId); 
 
             // deserialisation de l'objet client
-            var client = JsonConvert.DeserializeObject<ClientReadDto>(
+            var clientDTO = JsonConvert.DeserializeObject<ClientReadDto>(
                 await getClient.Content.ReadAsStringAsync()
                 );
 
             // deserialisation de l'objet projecttype
-            var projectType = JsonConvert.DeserializeObject<ProjectTypeReadDto>(
+            var projectTypeDTO = JsonConvert.DeserializeObject<ProjectTypeReadDto>(
                 await getProjectType.Content.ReadAsStringAsync()
                 );
 
             // mapping des données deserialisés 
-            var clientMap = _mapper.Map<Client>(client);
-            var projectTypeMap = _mapper.Map<ProjectType>(projectType);
+            var clientMap = _mapper.Map<Client>(clientDTO);
+            var projectTypeMap = _mapper.Map<ProjectType>(projectTypeDTO);
 
-            var clientExternalId = _repository.GetClientById(clientMap.Id);
-            var projectTypeExternalId = _repository.GetProjectTypeById(projectTypeMap.Id);
+            var client = _repository.GetClientById(clientMap.Id);
+            var projectType = _repository.GetProjectTypeById(projectTypeMap.Id);
 
-            /**
-            * condition qui suivant à la valeur de clienExternalID
-            * et projectExternalId attache l'objet ou une valeur de l'objet
-            */
-            if (clientExternalId != null && projectTypeExternalId != null)
-            {
-                projectModel.ClientId = clientMap.Id; 
-                projectModel.ProjectTypeId = projectTypeMap.Id;
-            }
-            else if (clientExternalId != null && projectTypeExternalId == null)
-            {
-                projectModel.ClientId = clientMap.Id;
-                projectModel.projectType = projectTypeMap; // j'attache le nouveau type de projet au projet
-            }
-            else if (clientExternalId == null && projectTypeExternalId != null)
-            {
-                projectModel.client = clientMap; // j'attache le nouveau client au projet
-                projectModel.ProjectTypeId = projectTypeMap.Id; 
-            }
-            else
-            {
-                projectModel.projectType = projectTypeMap; // j'attache le nouveau type de projet au projet
-                projectModel.client = clientMap; // j'attache le nouveau client au projet
-            }
+            if (client == null) projectModel.client = clientMap;
+            if (projectType == null) projectModel.projectType = projectTypeMap;
+           
        
             _repository.CreateProject(projectModel);
 

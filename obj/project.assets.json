@@ -1186,19 +1186,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Maxime\\.nuget\\packages\\": {}
+    "C:\\Users\\wuill\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Maxime\\Desktop\\RefWebLogiciel - Services\\project-service-refwebsoftware\\ProjectService.csproj",
+      "projectUniqueName": "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\ProjectService.csproj",
       "projectName": "ProjectService",
-      "projectPath": "C:\\Users\\Maxime\\Desktop\\RefWebLogiciel - Services\\project-service-refwebsoftware\\ProjectService.csproj",
-      "packagesPath": "C:\\Users\\Maxime\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Maxime\\Desktop\\RefWebLogiciel - Services\\project-service-refwebsoftware\\obj\\",
+      "projectPath": "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\ProjectService.csproj",
+      "packagesPath": "C:\\Users\\wuill\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Maxime\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\wuill\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"

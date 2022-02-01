@@ -4,8 +4,11 @@ using System;
 
 namespace project_service_refwebsoftware.Dtos
 {
-    public class ProjectCreateDto
+    public class ProjectCreatedDto
     {
+        [Required]
+        public int Id { get; set; }
+
         [Required]
         public string Name { get; set; }
 
@@ -20,5 +23,7 @@ namespace project_service_refwebsoftware.Dtos
 
         [Required]
         public int ProjectTypeId { get; set; }
+
+        public string Event { get; set; }
     }
 }

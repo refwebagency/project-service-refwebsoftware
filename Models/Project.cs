@@ -1,7 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 
-namespace ProjectService.Models
+namespace project_service_refwebsoftware.Models
 {
     public class Project
     {
@@ -18,10 +18,16 @@ namespace ProjectService.Models
         [Required]
         public DateTime EndtDate { get; set; }
 
-        // public Todo
+        [Required]
+        public int ProjectTypeId { get; set; }
 
-        // public ProjectType
+        public ProjectType projectType { get; set;}
 
-        // public Client
+        [Required]
+        public int ClientId { get; set; }
+
+        [Required]
+        public Client client { get; set; }
+
     }
 }

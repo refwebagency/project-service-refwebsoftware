@@ -1,12 +1,13 @@
 using System.Collections.Generic;
-using ProjectService.Models;
+using project_service_refwebsoftware.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using ProjectService.Data;
+using Newtonsoft.Json.Linq;
+using System;
 
 // Sur ce fichier j'implémente le contenu des méthodes
 
-namespace ProjectService.Data
+namespace project_service_refwebsoftware.Data
 {
     public class ProjectRepo : IProjectRepo
     {
@@ -28,10 +29,14 @@ namespace ProjectService.Data
         public void CreateProject(Project project)
         {
             if(project != null)
+            {  
+
+            // je recupere le client qui vient d'être crée
+            _context.project.Add(project);        
+            }
+            else
             {
-            //_context.Projects equivaut a bdd.Projects
-            _context.project.Add(project);
-            _context.SaveChanges();
+                throw new System.ArgumentNullException(nameof(project));
             }
             
         }
@@ -42,9 +47,23 @@ namespace ProjectService.Data
         */
         public IEnumerable<Project> GetAllProjects()
         {
+            _context.projectType.ToList();
+            _context.client.ToList();
             return _context.project.ToList();
         }
         
+        // je veux qu'il me retourne suivant le context les client sous forme de liste
+        public IEnumerable<Client> GetAllClientInProjects()
+        {
+            return _context.client.ToList();
+        }
+
+        // je veux qu'il me retourne suivant le context les types de projects sous forme de liste
+        public IEnumerable<ProjectType> GetAllProjectTypeInProject()
+        {
+            return _context.projectType.ToList();
+        }
+
         /**
         * je veux qu'il me retourne suivant le context un project par l'id de type int
         * ça va me récuperé le premier ou par default
@@ -52,7 +71,33 @@ namespace ProjectService.Data
         */
         public Project GetProjectById(int id)
         {
+            _context.projectType.ToList();
+            _context.client.ToList();
             return _context.project.FirstOrDefault(p => p.Id == id);
+        }
+
+        public Client GetClientById(int id)
+        {
+            return _context.client.FirstOrDefault(c => c.Id == id);
+        }
+
+        public ProjectType GetProjectTypeById(int id)
+        {
+            return _context.projectType.FirstOrDefault(p => p.Id == id);
+        }
+
+        public IEnumerable<Project> GetProjectsByProjectTypeId(int id)
+        {
+            _context.projectType.ToList();
+            _context.client.ToList();
+            return _context.project.Where(pt => pt.ProjectTypeId == id).ToList();
+        }
+
+        public IEnumerable<Project> GetProjectsByClientId(int id)
+        {
+            _context.projectType.ToList();
+            _context.client.ToList();
+            return _context.project.Where(cp => cp.ClientId == id).ToList();
         }
 
         /**
@@ -63,6 +108,7 @@ namespace ProjectService.Data
         {
             var projectId = _context.project.Find(id);
             _context.Entry(projectId).State = EntityState.Modified;
+            
         }
 
         public void DeleteProjectById(int id)
@@ -73,6 +119,21 @@ namespace ProjectService.Data
                 _context.project.Remove(projectItem);
             }
             
+        }
+
+        //méthode update client rabbitMQ
+        public void UpdateClientById(int id)
+        {
+            var Client = _context.client.FirstOrDefault(Client => Client.Id == id);
+
+            _context.Entry(Client).State = EntityState.Modified;
+        }
+
+        public void UpdateProjectTypeById(int id)
+        {
+            var projectType = _context.projectType.FirstOrDefault(projectType => projectType.Id == id);
+
+            _context.Entry(projectType).State = EntityState.Modified;
         }
 
         /**

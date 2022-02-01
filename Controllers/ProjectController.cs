@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
-using ProjectService.Data;
-using ProjectService.Dtos;
-using ProjectService.Models;
+using project_service_refwebsoftware.Data;
+using project_service_refwebsoftware.Dtos;
+using project_service_refwebsoftware.Models;
+using System.Net.Http;
+using Newtonsoft.Json;
+using Microsoft.Extensions.Configuration;
+using project_service_refwebsoftware.AsyncDataService;
 
-
-namespace ProjectService.Controllers
+namespace project_service_refwebsoftware.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -15,13 +19,20 @@ namespace ProjectService.Controllers
     {
         private readonly IProjectRepo _repository;
         private readonly IMapper _mapper;
+        private readonly HttpClient _httpClient;
+        private readonly IConfiguration _configuration;
+        private readonly IMessageBusClient _messageBusClient;
     
 
-        public ProjectController(IProjectRepo repository, IMapper mapper)
+        public ProjectController(IProjectRepo repository, IMapper mapper, HttpClient httpClient, IConfiguration configuration, IMessageBusClient messageBusClient)
         {
             _repository = repository;
             _mapper = mapper;
+            _httpClient = httpClient;
+            _configuration = configuration;
+            _messageBusClient = messageBusClient;
         }
+
 
         /**Pour mettre en forme des résulat de GetAllProjects, 
         pour avoir tous les projets sous forme de liste
@@ -45,9 +56,46 @@ namespace ProjectService.Controllers
         {
             var ProjectItem = _repository.GetProjectById(id);
 
+            
             if(ProjectItem != null)
             {
-            return Ok(_mapper.Map<ProjectReadDto>(ProjectItem));
+
+                return Ok(_mapper.Map<ProjectReadDto>(ProjectItem));
+
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        //Pour retourner un objet par L'id
+        [HttpGet("projecttype/{id}", Name = "GetProjectByProjectTypeId")]
+        public ActionResult<ProjectReadDto> GetProjectByProjectTypeId(int id)
+        {
+            var ProjectItem = _repository.GetProjectsByProjectTypeId(id);
+
+            if(ProjectItem != null)
+            {   
+                var test = _mapper.Map<IEnumerable<ProjectReadDto>>(ProjectItem);
+                Console.WriteLine(test);
+            return Ok(_mapper.Map<IEnumerable<ProjectReadDto>>(ProjectItem));
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        //Pour retourner un objet par L'id
+        [HttpGet("client/{id}", Name = "GetProjectByClientId")]
+        public ActionResult<ProjectReadDto> GetProjectByClientId(int id)
+        {
+            var ProjectItem = _repository.GetProjectsByClientId(id);
+
+            if(ProjectItem != null)
+            {
+            return Ok(_mapper.Map<IEnumerable<ProjectReadDto>>(ProjectItem));
             }
             else
             {
@@ -56,11 +104,39 @@ namespace ProjectService.Controllers
         }
 
         [HttpPost]
-        public ActionResult<ProjectReadDto> CreateProject(ProjectCreateDto projectCreateDto)
+        public async Task<ActionResult<ProjectReadDto>> CreateProject(ProjectCreateDto projectCreateDto)
         {
             var projectModel = _mapper.Map<Project>(projectCreateDto);
 
+            // requete http en async pour recuperer sur clientService un client par son id stock dans une variable
+            var getClient = await _httpClient.GetAsync($"{_configuration["ClientService"]}" + projectModel.ClientId); 
+
+            // requete http en async pour recuperer sur projectTypeService un type de projet par son id et stocke dans une variable
+            var getProjectType = await _httpClient.GetAsync($"{_configuration["ProjectTypeService"]}" + projectModel.ProjectTypeId); 
+
+            // deserialisation de l'objet client
+            var clientDTO = JsonConvert.DeserializeObject<ClientReadDto>(
+                await getClient.Content.ReadAsStringAsync()
+                );
+
+            // deserialisation de l'objet projecttype
+            var projectTypeDTO = JsonConvert.DeserializeObject<ProjectTypeReadDto>(
+                await getProjectType.Content.ReadAsStringAsync()
+                );
+
+            // mapping des données deserialisés 
+            var clientMap = _mapper.Map<Client>(clientDTO);
+            var projectTypeMap = _mapper.Map<ProjectType>(projectTypeDTO);
+
+            var client = _repository.GetClientById(clientMap.Id);
+            var projectType = _repository.GetProjectTypeById(projectTypeMap.Id);
+
+            if (client == null) projectModel.client = clientMap;
+            if (projectType == null) projectModel.projectType = projectTypeMap;
+           
+       
             _repository.CreateProject(projectModel);
+
             //sauvegarde les changements au niveau des données
             _repository.SaveChanges();
 
@@ -85,6 +161,26 @@ namespace ProjectService.Controllers
             }
             _repository.UpdateProject(id);
             _repository.SaveChanges();
+
+            // Envoie Async des Data
+            try
+            {
+                Console.WriteLine(projectModelFromRepo.Name);
+    
+                //On envoie les données du projet mis à jour avec les données du DTO
+                var projectUpdatedDto = _mapper.Map<ProjectUpdateAsyncDto>(projectModelFromRepo);
+
+                // On dit que l'event est égal à "Project_Updated"
+                projectUpdatedDto.Event = "Project_Updated";
+
+                // On appelle la méthode qui se trouve dans MessageBusClient
+                _messageBusClient.UpdatedProject(projectUpdatedDto);
+            }
+
+            catch (System.Exception ex)
+            {
+                Console.WriteLine("Error: Async" + ex.Message);
+            }
             
             return CreatedAtRoute(nameof(GetProjectById), new { Id = projectUpdateDto.Id }, projectUpdateDto);
         }

@@ -1,8 +1,7 @@
-using System.ComponentModel.DataAnnotations;
-using System.Collections.Generic;
 using System;
+using project_service_refwebsoftware.Models;
 
-namespace ProjectService.Dtos
+namespace project_service_refwebsoftware.Dtos
 {
     public class ProjectReadDto
     {
@@ -14,6 +13,13 @@ namespace ProjectService.Dtos
 
         public DateTime EndtDate { get; set; }
         
+        public int ProjectTypeId { get; set; }
+        
+        public int ClientId { get; set; }
+
+        public Client client { get; set; }
+
+        public ProjectType projectType { get; set; }
 
     }
 }

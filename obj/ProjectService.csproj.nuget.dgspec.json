@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Maxime\\Desktop\\REF-WEB\\ProjectService\\ProjectService.csproj": {}
+    "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\ProjectService.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Maxime\\Desktop\\REF-WEB\\ProjectService\\ProjectService.csproj": {
+    "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\ProjectService.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Maxime\\Desktop\\REF-WEB\\ProjectService\\ProjectService.csproj",
+        "projectUniqueName": "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\ProjectService.csproj",
         "projectName": "ProjectService",
-        "projectPath": "C:\\Users\\Maxime\\Desktop\\REF-WEB\\ProjectService\\ProjectService.csproj",
-        "packagesPath": "C:\\Users\\Maxime\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Maxime\\Desktop\\REF-WEB\\ProjectService\\obj\\",
+        "projectPath": "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\ProjectService.csproj",
+        "packagesPath": "C:\\Users\\wuill\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\wuill\\OneDrive\\Documents\\GitHub\\project-service-refwebsoftware\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Maxime\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\wuill\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net5.0"
@@ -55,6 +55,14 @@
             "Microsoft.EntityFrameworkCore.InMemory": {
               "target": "Package",
               "version": "[5.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.2.2, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

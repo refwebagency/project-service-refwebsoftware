@@ -44,12 +44,15 @@ namespace project_service_refwebsoftware
             services.AddHostedService<MessageBusSuscriber>();
             services.AddTransient<IEventProcessor, EventProcessor>();
             services.AddControllers();
+            services.AddCors(options => options.AddPolicy("ApiCorsPolicy", builder =>
+            {
+                builder.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
+            }));
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "project_service_refwebsoftware", Version = "v1" });
             });
-
-
+ 
             Console.WriteLine("URL todo service: " + Configuration["TodoService"]);
         }
 
@@ -68,6 +71,8 @@ namespace project_service_refwebsoftware
             app.UseRouting();
 
             app.UseAuthorization();
+
+            app.UseCors("ApiCorsPolicy"); 
 
             app.UseEndpoints(endpoints =>
             {
